@@ -20,20 +20,24 @@ function App() {
 
   const handleEnvelopeClick = () => {
     // Start the opening animation
+    console.log('Envelope clicked, setting stage to 1');
     setStage(1);
     // Play music if possible (we'll try to play, but it might be blocked)
     playMusic();
   };
 
   const handleOpeningAnimationEnd = () => {
+    console.log('Opening animation ended, setting stage to 2');
     setStage(2);
   };
 
   const handleScrollAnimationEnd = () => {
+    console.log('Scroll animation ended, setting stage to 3');
     setStage(3);
   };
 
   const handleTransitionEnd = () => {
+    console.log('Transition ended, setting stage to 4');
     setStage(4);
   };
 
@@ -42,6 +46,7 @@ function App() {
     const { scrollTop, scrollHeight, clientHeight } = event.currentTarget;
     if (scrollTop + clientHeight >= scrollHeight - 100 && stage === 4) {
       // User has scrolled to near the bottom of the letter content
+      console.log('Scrolled to bottom, setting stage to 5');
       setStage(5);
     }
   };
