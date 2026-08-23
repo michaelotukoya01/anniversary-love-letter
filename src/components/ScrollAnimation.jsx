@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import Envelope from './Envelope';
+import LetterContent from './LetterContent';
 
 const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd }) => {
   // Stage 1: envelope lifts and transforms into scroll (scale up, slight rotation)
