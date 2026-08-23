@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        serif: ['"Cormorant Garamond"', '"Times New Roman"', serif],
-        sans: ['"Inter"', '"Helvetica Neue"', sans-serif],
+        serif: ['"Cormorant Garamond"', '"Times New Roman"', 'serif'],
+        sans: ['"Inter"', '"Helvetica Neue"', 'sans-serif'],
       },
       colors: {
         black: {
