@@ -56,8 +56,8 @@ const Background = ({ stage }) => {
   // We'll also add a subtle vignette and gradient overlay
   return (
     <div className="absolute inset-0">
-      {/* Black background with subtle gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black" />
+      {/* Dark background with subtle gradient - not pure black */}
+      <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-black" />
       {/* Vignette */}
       <div className="absolute inset-0 bg-radial-gradient bg-center bg-[size:200%_200%] from-transparent via-black/80 to-black/90" />
       {/* Only show background from stage 3 onwards (after transition) */}
