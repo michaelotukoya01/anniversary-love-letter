@@ -40,7 +40,7 @@ const sections = letterText.split('\n\n').filter(section => section.trim() !== '
 
 const LetterContent = () => {
   return (
-    <div className="relative max-w-2xl mx-auto px-4 pt-20 pb-32 text-white">
+    <div className="relative max-w-3xl mx-auto px-6 pt-8 pb-6 text-gray-800 font-serif font-bold text-xl md:text-2xl leading-relaxed">
       {sections.map((section, index) => {
         // Check if this section contains an emotional quote we want to highlight
         const emotionalQuotes = [
@@ -62,10 +62,10 @@ const LetterContent = () => {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 0.8, delay: index * 0.2 }}
-            className="mb-10 text-lg md:text-xl leading-relaxed"
+            className="mb-10"
           >
             {isEmotional ? (
-              <EmotionalQuote text={section} />
+              <EmotionalQuote text={section} className="font-bold" />
             ) : (
               <p>{section}</p>
             )}
