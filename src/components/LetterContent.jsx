@@ -40,7 +40,7 @@ const sections = letterText.split('\n\n').filter(section => section.trim() !== '
 
 const LetterContent = () => {
   return (
-    <div className="relative max-w-3xl mx-auto px-4 pt-8 pb-20 text-gray-800 font-serif">
+    <div className="relative max-w-2xl mx-auto px-4 pt-20 pb-32 text-white">
       {sections.map((section, index) => {
         // Check if this section contains an emotional quote we want to highlight
         const emotionalQuotes = [

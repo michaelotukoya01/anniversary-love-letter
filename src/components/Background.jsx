@@ -60,8 +60,8 @@ const Background = ({ stage }) => {
       <div className="absolute inset-0 bg-gradient-to-b from-gray-900 via-gray-950 to-black" />
       {/* Vignette */}
       <div className="absolute inset-0 bg-radial-gradient bg-center bg-[size:200%_200%] from-transparent via-black/80 to-black/90" />
-      {/* Only show background from stage 2 onwards (after envelope transform) */}
-      {stage >= 2 && (
+      {/* Only show background from stage 3 onwards (after transition) */}
+      {stage >= 3 && (
         <>
           {/* Subtle light particles */}
           <div className="absolute inset-0 pointer-events-none">
