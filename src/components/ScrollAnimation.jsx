@@ -3,147 +3,80 @@ import { motion } from 'framer-motion';
 import Envelope from './Envelope';
 
 const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd, onTransitionEnd }) => {
-  // Define variants for each stage
-  const variants = {
-    initial: {
-      opacity: 0,
-      scale: 0.9,
-    },
-    opening: {
-      opacity: 1,
-      scale: [0.9, 1.02, 1], // slight bounce
-      transition: {
-        duration: 0.8,
-        ease: 'easeOut',
-      },
-    },
-    scroll: {
-      // We'll animate height and opacity to simulate unrolling scroll
-      height: [0, 400],
-      opacity: [0, 1],
-      transition: {
-        duration: 1.5,
-        ease: 'easeOut',
-      },
-    },
-    transition: {
-      // Fade out and scale down to transition to black background
-      opacity: [1, 0],
-      scale: [1, 0.9],
-      transition: {
-        duration: 1.2,
-        ease: 'easeInOut',
-      },
-    },
+  // Initial values for each stage
+  const initialValues = {
+    1: { opacity: 0, scale: 0.9 }, // envelope opening start
+    2: { height: 0, opacity: 0 }, // scroll unroll start
+    3: { height: 400, opacity: 1, scale: 1 }, // transition start (scroll visible)
   };
 
-  // Base styles for the container
-  const baseStyle = {
-    position: 'relative',
-    marginX: 4,
-    width: { base: 200, md: 260 },
-    height: { base: 140, md: 180 },
+  // Animated (target) values for each stage
+  const animateValues = {
+    1: { opacity: 1, scale: 1 }, // envelope opening end
+    2: { height: 400, opacity: 1 }, // scroll unroll end
+    3: { opacity: 0, scale: 0.9 }, // transition end (fade out)
   };
 
-  // Determine which variant to animate to based on stage
-  let variantName = 'initial';
-  let containerStyle = baseStyle;
+  // Transition config for each stage
+  const transitionConfig = {
+    1: { duration: 0.8, ease: 'easeOut' },
+    2: { duration: 1.5, ease: 'easeOut' },
+    3: { duration: 1.2, ease: 'easeInOut' },
+  };
 
+  // Determine which visual to show based on stage
+  let Visual = null;
   if (stage === 1) {
-    variantName = 'opening';
-    // Keep envelope size
-    containerStyle = {
-      ...baseStyle,
-      width: { base: 200, md: 260 },
-      height: { base: 140, md: 180 },
-    };
-  } else if (stage === 2) {
-    variantName = 'scroll';
-    // Scroll unrolls to larger height
-    containerStyle = {
-      ...baseStyle,
-      width: { base: 200, md: 260 },
-      height: 'auto', // let content determine height, but we animate height via variant
-      minHeight: 400,
-    };
-  } else if (stage === 3) {
-    variantName = 'transition';
-    // Fade out and shrink
-    containerStyle = {
-      ...baseStyle,
-      width: { base: 200, md: 260 },
-      height: { base: 140, md: 180 },
-    };
+    Visual = () => <Envelope onClick={() => {}} />; // non-interactive envelope visual
+  } else if (stage === 2 || stage === 3) {
+    Visual = () => (
+      <>
+        <div className="absolute inset-0">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22100%22 height=%22100%22 viewBox=%220%200%20100%20100%22><rect width=%22100%22 height=%22100%22 fill=%22%23f9f6ee%22/%22><path d=%22M0,50 Q25,40 50,50 T100,50%22 stroke=%22%23e8e3d9%22 stroke-width=%220.5%22 fill=%22none%22/%22></svg>')",
+              backgroundSize: 'contain',
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22100%22 height=%2220%22 viewBox=%220%200%20100%2020%22><rect width=%22100%22 height=%2220%22 fill=%22%23e8e3d9%22/%22></svg>')",
+              backgroundRepeat: 'repeat-y',
+              backgroundSize: '100% 20px',
+            }}
+          />
+        </div>
+      </>
+    );
   }
+
+  // If stage is 0 (initial) or >3, render nothing
+  if (stage < 1 || stage > 3) return null;
+
+  const initial = initialValues[stage] || {};
+  const animate = animateValues[stage] || {};
+  const transition = transitionConfig[stage] || {};
+
+  // Determine which callback to call based on stage
+  let onComplete = () => {};
+  if (stage === 1) onComplete = onOpeningAnimationEnd;
+  else if (stage === 2) onComplete = onScrollAnimationEnd;
+  else if (stage === 3) onComplete = onTransitionEnd;
 
   return (
     <motion.div
-      style={containerStyle}
-      variants={variants}
-      initial="initial"
-      animate={variantName}
-      // Use onAnimationEnd to call the appropriate handler based on stage
-      onAnimationEnd={() => {
-        if (stage === 1) onOpeningAnimationEnd();
-        else if (stage === 2) onScrollAnimationEnd();
-        else if (stage === 3) onTransitionEnd();
-      }}
+      key={stage}
+      initial={initial}
+      animate={animate}
+      transition={transition}
+      onAnimationComplete={onComplete}
+      className="relative mx-4"
     >
-      {/* Content that changes based on stage */}
-      {stage === 1 && (
-        <>
-          {/* Envelope visual (same as Envelope but non‑interactive) */}
-          <Envelope onClick={() => {}} />
-        </>
-      )}
-      {stage === 2 && (
-        <>
-          {/* Scroll visual: parchment texture with lines */}
-          <div className="absolute inset-0">
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage:
-                  "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22100%22 height=%22100%22 viewBox=%220%200%20100%20100%22><rect width=%22100%22 height=%22100%22 fill=%22%23f9f6ee%22/%22><path d=%22M0,50 Q25,40 50,50 T100,50%22 stroke=%22%23e8e3d9%22 stroke-width=%220.5%22 fill=%22none%22/%22></svg>')",
-                backgroundSize: 'contain',
-              }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage:
-                  "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22100%22 height=%2220%22 viewBox=%220%200%20100%2020%22><rect width=%22100%22 height=%2220%22 fill=%22%23e8e3d9%22/%22></svg>')",
-                backgroundRepeat: 'repeat-y',
-                backgroundSize: '100% 20px',
-              }}
-            />
-          </div>
-        </>
-      )}
-      {stage === 3 && (
-        <>
-          {/* Same scroll visual as stage 2, but will fade out via animation */}
-          <div className="absolute inset-0">
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage:
-                  "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22100%22 height=%22100%22 viewBox=%220%200%20100%20100%22><rect width=%22100%22 height=%22100%22 fill=%22%23f9f6ee%22/%22><path d=%22M0,50 Q25,40 50,50 T100,50%22 stroke=%22%23e8e3d9%22 stroke-width=%220.5%22 fill=%22none%22/%22></svg>')",
-                backgroundSize: 'contain',
-              }}
-            />
-            <div
-              className="absolute inset-0"
-              style={{
-                backgroundImage:
-                  "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22100%22 height=%2220%22 viewBox=%220%200%20100%2020%22><rect width=%22100%22 height=%2220%22 fill=%22%23e8e3d9%22/%22></svg>')",
-                backgroundRepeat: 'repeat-y',
-                backgroundSize: '100% 20px',
-              }}
-            />
-          </div>
-        </>
-      )}
+      {Visual && <Visual />}
     </motion.div>
   );
 };
