@@ -87,15 +87,18 @@ I hope today and many more days remind us of how awesome we are.`;
             }
             letterContent.appendChild(p);
         });
+        // Force a reflow to ensure layout updates
+        letterContent.offsetHeight;
     }
 
-    // Function to get or create audio element
+    // Function to get or create audio element (without setting src until needed)
     function getAudio() {
         if (!backgroundAudio) {
-            backgroundAudio = new Audio('assets/audio/a-thousand-years.mp3');
+            backgroundAudio = new Audio();
             backgroundAudio.loop = true;
             backgroundAudio.volume = 0.5;
         }
+        backgroundAudio.src = 'assets/audio/a-thousand-years.mp3';
         return backgroundAudio;
     }
 
