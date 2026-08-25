@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicControl = document.getElementById('music-control');
     const musicToggle = document.getElementById('music-toggle');
     const musicIcon = document.getElementById('music-icon');
-    const backgroundAudio = document.getElementById('background-audio');
 
     // State
     let state = {
@@ -34,6 +33,9 @@ document.addEventListener('DOMContentLoaded', () => {
         finalShown: false,
         musicPlaying: false
     };
+
+    // Audio element (created lazily)
+    let backgroundAudio = null;
 
     // Letter content (as provided in the prompt)
     const letterText = `Happy anniversary my babyyyy.🥹
@@ -85,6 +87,16 @@ I hope today and many more days remind us of how awesome we are.`;
             }
             letterContent.appendChild(p);
         });
+    }
+
+    // Function to get or create audio element
+    function getAudio() {
+        if (!backgroundAudio) {
+            backgroundAudio = new Audio('assets/audio/a-thousand-years.mp3');
+            backgroundAudio.loop = true;
+            backgroundAudio.volume = 0.5;
+        }
+        return backgroundAudio;
     }
 
     // Password handling
@@ -147,7 +159,8 @@ I hope today and many more days remind us of how awesome we are.`;
 
         // Start music
         try {
-            backgroundAudio.play().then(() => {
+            const audio = getAudio();
+            audio.play().then(() => {
                 state.musicPlaying = true;
                 musicControl.classList.add('visible');
             }).catch(e => {
@@ -205,11 +218,14 @@ I hope today and many more days remind us of how awesome we are.`;
     // Music toggle
     musicToggle.addEventListener('click', () => {
         if (state.musicPlaying) {
-            backgroundAudio.pause();
+            if (backgroundAudio) {
+                backgroundAudio.pause();
+            }
             state.musicPlaying = false;
             musicToggle.classList.add('muted');
         } else {
-            backgroundAudio.play().then(() => {
+            const audio = getAudio();
+            audio.play().then(() => {
                 state.musicPlaying = true;
                 musicToggle.classList.remove('muted');
             }).catch(e => {
@@ -219,18 +235,22 @@ I hope today and many more days remind us of how awesome we are.`;
     });
 
     // Handle audio ended (loop is set, but just in case)
-    backgroundAudio.addEventListener('ended', () => {
-        if (state.musicPlaying) {
-            backgroundAudio.play().catch(e => console.warn('Loop failed:', e));
-        }
-    });
+    if (backgroundAudio) {
+        backgroundAudio.addEventListener('ended', () => {
+            if (state.musicPlaying) {
+                backgroundAudio.play().catch(e => console.warn('Loop failed:', e));
+            }
+        });
+    }
 
     // Handle visibility change (pause audio when tab is hidden)
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
-            backgroundAudio.pause();
+            if (backgroundAudio) backgroundAudio.pause();
         } else if (state.musicPlaying) {
-            backgroundAudio.play().catch(e => console.warn('Resume failed:', e));
+            if (backgroundAudio) {
+                backgroundAudio.play().catch(e => console.warn('Resume failed:', e));
+            }
         }
     });
 });
