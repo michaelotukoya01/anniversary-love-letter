@@ -3,13 +3,13 @@ import OpeningScene from './components/OpeningScene';
 import ScrollAnimation from './components/ScrollAnimation';
 import Background from './components/Background';
 import LetterContent from './components/LetterContent';
-import FinalScene from './components/FinalScene';
+import FinalPage from './components/FinalPage';
 import MusicControl from './components/MusicControl';
 import { useMusic } from './hooks/useMusic';
 
 function App() {
-  const [stage, setStage] = useState(0); // 0: opening, 1: envelope->scroll transform, 2: scroll unroll + letter, 3: final
-  const [showFinal, setShowFinal] = useState(false);
+  const [stage, setStage] = useState(0); // 0: opening, 1: envelope->scroll transform, 2: scroll unroll + letter
+  const [showFinalPage, setShowFinalPage] = useState(false);
   const scrollRef = useRef(null);
   const { playMusic, pauseMusic, isPlaying } = useMusic();
 
@@ -31,8 +31,12 @@ function App() {
   };
 
   const handleScrollAnimationEnd = () => {
-    // Scroll unroll done, show final scene
-    setStage(3);
+    // Scroll unroll done; we stay in stage 2 so the letter content and "Read More" button remain visible
+    // No state change needed here
+  };
+
+  const handleReadMore = () => {
+    setShowFinalPage(true);
   };
 
   return (
@@ -43,23 +47,26 @@ function App() {
       {/* Music Control */}
       <MusicControl isPlaying={isPlaying} onToggle={() => isPlaying ? pauseMusic() : playMusic()} />
 
-      {/* Opening Scene (only in stage 0) */}
-      {stage === 0 && (
-        <OpeningScene onEnvelopeClick={handleEnvelopeClick} />
-      )}
+      {!showFinalPage ? (
+        <>
+          {/* Opening Scene (only in stage 0) */}
+          {stage === 0 && (
+            <OpeningScene onEnvelopeClick={handleEnvelopeClick} />
+          )}
 
-      {/* Scroll Animation (stages 1 and 2) */}
-      {stage >= 1 && stage <= 2 && (
-        <ScrollAnimation
-          stage={stage}
-          onOpeningAnimationEnd={handleOpeningAnimationEnd}
-          onScrollAnimationEnd={handleScrollAnimationEnd}
-        />
-      )}
-
-      {/* Final Scene (stage 3) */}
-      {stage === 3 && (
-        <FinalScene />
+          {/* Scroll Animation (stages 1 and 2) */}
+          {stage >= 1 && stage <= 2 && (
+            <ScrollAnimation
+              stage={stage}
+              onOpeningAnimationEnd={handleOpeningAnimationEnd}
+              onScrollAnimationEnd={handleScrollAnimationEnd}
+              onReadMore={handleReadMore}
+            />
+          )}
+        </>
+      ) : (
+        // Final Page
+        <FinalPage />
       )}
     </div>
   );

@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import Envelope from './Envelope';
 import LetterContent from './LetterContent';
 
-const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd }) => {
+const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd, onReadMore }) => {
   const parchmentRef = useRef(null);
   const contentHeightRef = useRef(0);
 
@@ -67,7 +67,7 @@ const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd })
             transformOrigin: 'center',
             transform: ({ topRollY, topRollRotateX }) => `
               translateY(${topRollY}px)
-              rotateX(${topRollRotateX}deg)
+              rotateX(${topRotateX}deg)
             `,
           }}
         >
@@ -90,7 +90,7 @@ const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd })
           <motion.div
             style={{ height: '100%', overflow: 'hidden' }}
           >
-            <LetterContent className="text-gray-800 font-serif leading-relaxed" />
+            <LetterContent className="text-gray-800 font-serif leading-relaxed" onReadMore={onReadMore} />
           </motion.div>
         </motion.div>
 

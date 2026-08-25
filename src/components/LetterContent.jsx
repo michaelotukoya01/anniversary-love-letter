@@ -1,8 +1,8 @@
 import React from 'react';
 import EmotionalQuote from './EmotionalQuote';
 
-// We'll split the letter into sections based on double newlines or natural breaks
-const letterText = `Happy anniversary my babyyyy.🥹
+// Original letter text as provided in the prompt (without the closing messages)
+const actualLetterText = `Happy anniversary my babyyyy.🥹
 
 it’s been so long I did this, so why not today?
 
@@ -32,17 +32,23 @@ You definitely know that you are loved and you know how much you matter to me an
 
 I am so grateful for you and I’ll always the place you have in my life.
 
-Happy anniversary to us my loveee.😚I hope today and many more days remind us of how awesome we are.
+Happy anniversary to us my loveee.😚
 
-Our story may not always be perfectly but it is ours and that makes every page worth turning.
+I hope today and many more days remind us of how awesome we are.`;
+
+// Closing messages (to be shown on final page)
+const closingMessagesText = `Our story may not always be perfectly but it is ours and that makes every page worth turning.
+
 with all my heart, always yours.
-Happy anniversary, my babyy.
-🖤`;
 
-// Split by double newline to get sections
-const sections = letterText.split('\n\n').filter(section => section.trim() !== '');
+7 • always`;
 
-const LetterContent = () => {
+// Split actual letter text into sections based on double newline
+const sections = actualLetterText
+  .split('\n\n')
+  .filter(section => section.trim() !== '');
+
+const LetterContent = ({ onReadMore }) => {
   return (
     <div className="max-w-prose px-6 pt-8 pb-6 text-gray-800 font-serif leading-relaxed">
       {sections.map((section, index) => {
@@ -70,6 +76,18 @@ const LetterContent = () => {
           </div>
         );
       })}
+
+      {/* Read More button to navigate to final page */}
+      {onReadMore && (
+        <div className="mt-6 flex justify-center">
+          <button
+            onClick={onReadMore}
+            className="px-4 py-2 bg-white text-black rounded hover:bg-gray-100"
+          >
+            Read More ❤️
+          </button>
+        </div>
+      )}
     </div>
   );
 };
