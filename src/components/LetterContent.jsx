@@ -1,5 +1,4 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import EmotionalQuote from './EmotionalQuote';
 
 // We'll split the letter into sections based on double newlines or natural breaks
@@ -40,7 +39,7 @@ const sections = letterText.split('\n\n').filter(section => section.trim() !== '
 
 const LetterContent = () => {
   return (
-    <div className="relative max-w-3xl mx-auto px-6 pt-8 pb-6 text-gray-800 font-serif font-bold text-xl md:text-2xl leading-relaxed">
+    <div className="max-w-prose px-6 pt-8 pb-6 text-gray-800 font-serif leading-relaxed">
       {sections.map((section, index) => {
         // Check if this section contains an emotional quote we want to highlight
         const emotionalQuotes = [
@@ -57,26 +56,15 @@ const LetterContent = () => {
         const isEmotional = emotionalQuotes.some(quote => section.includes(quote));
 
         return (
-          <motion.div
-            key={index}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: index * 0.2 }}
-            className="mb-10"
-          >
+          <div key={index} className="mb-10">
             {isEmotional ? (
-              <EmotionalQuote text={section} className="font-bold" />
+              <EmotionalQuote text={section} className="font-italic" />
             ) : (
               <p>{section}</p>
             )}
-          </motion.div>
+          </div>
         );
       })}
-
-      {/* The final message from the requirements - but note we have a FinalScene component too */}
-      {/* We'll add the final message here as part of the letter content, but the FinalScene will show the sign-off */}
-      {/* Actually, the letter ends with "Happy anniversary to us my loveee.😚I hope today and many more days remind us of how awesome we are." */}
-      {/* The FinalScene will show the additional closing message */}
     </div>
   );
 };

@@ -1,9 +1,20 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import Envelope from './Envelope';
 import LetterContent from './LetterContent';
 
 const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd }) => {
+  const parchmentRef = useRef(null);
+  const contentHeightRef = useRef(0);
+
+  // Measure content height after render
+  useEffect(() => {
+    if (parchmentRef.current) {
+      const height = parchmentRef.current.scrollHeight;
+      contentHeightRef.current = height;
+    }
+  }, []);
+
   // Stage 1: envelope lifts and transforms into scroll (scale up, slight rotation)
   const stage1Variants = {
     initial: { scale: 0.8, rotate: -5, opacity: 0 },
@@ -12,75 +23,108 @@ const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd })
     transition: { duration: 0.8, ease: 'easeOut' },
   };
 
-  // Stage 2: scroll unrolls with parchment texture and reveals letter
+  // Stage 2: scroll unrolls with parchment and reveals letter
   const stage2Variants = {
-    initial: { height: 0, opacity: 0 },
-    animate: { height: 560, opacity: 1 }, // sufficient height for content; overflow hidden will clip
-    exit: { height: 0, opacity: 0 },
+    initial: {
+      height: 0,
+      topRollY: 0,
+      bottomRollY: 0,
+      topRollRotateX: 30,
+      bottomRollRotateX: -30,
+      opacity: 0
+    },
+    animate: {
+      height: contentHeightRef.current || 560, // fallback to 560 if not measured
+      topRollY: -20, // move top roll up by half its height (approx)
+      bottomRollY: 20, // move bottom roll down
+      topRollRotateX: 0,
+      bottomRollRotateX: 0,
+      opacity: 1
+    },
+    exit: {
+      height: 0,
+      topRollY: 0,
+      bottomRollY: 0,
+      topRollRotateX: 30,
+      bottomRollRotateX: -30,
+      opacity: 0
+    },
     transition: { duration: 2.5, ease: 'easeOut' },
   };
 
   let Content = null;
   if (stage === 1) {
-    Content = () => <Envelope onClick={() => {}} />; // non‑interactive envelope visual
+    Content = () => <Envelope asScroll onClick={() => {}} />; // non‑interactive scroll visual
   } else if (stage === 2) {
     Content = () => (
-      <div className="relative">
-        {/* Parchment texture */}
-        <div
-          className="absolute inset-0"
+      <motion.div
+        style={{ position: 'relative', width: '100%', maxWidth: '400px', margin: '0 auto', overflow: 'hidden' }}
+      >
+        {/* Top roll */}
+        <motion.div
           style={{
-            backgroundImage:
-              "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22100%22 height=%22100%22 viewBox=%220%200%20100%20100%22><rect width=%22100%22 height=%22100%22 fill=%22%23f9f6ee%22/%22><path d=%22M0,50 Q25,40 50,50 T100,50%22 stroke=%22%23e8e3d9%22 stroke-width=%220.5%22 fill=%22none%22/%22></svg>')",
-            backgroundSize: 'contain',
-          }}
-        />
-        {/* Paper lines */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage:
-              "url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22100%22 height=%2220%22 viewBox=%220%200%22100%2020%22><rect width=%22100%22 height=%2220%22 fill=%22%23e8e3d9%22/%22></svg>')",
-            backgroundRepeat: 'repeat-y',
-            backgroundSize: '100% 20px',
-          }}
-        />
-        {/* Wooden rollers (top & bottom) */}
-        <div
-          className="absolute inset-x-0"
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            pointerEvents: 'none',
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 24,
+            backgroundColor: '#f9f6ee',
+            borderTopLeftRadius: '12px',
+            borderTopRightRadius: '12px',
+            backgroundImage: "linear-gradient(to bottom, #e8e3d9, #f9f6ee)",
+            boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
+            transformOrigin: 'center',
+            transform: ({ topRollY, topRollRotateX }) => `
+              translateY(${topRollY}px)
+              rotateX(${topRollRotateX}deg)
+            `,
           }}
         >
-          <div
-            className="relative"
-            style={{
-              width: 24,
-              height: 24,
-              backgroundColor: '#5d4037',
-              borderRadius: '50%',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-            }}
-          />
-          <div
-            className="relative"
-            style={{
-              width: 24,
-              height: 24,
-              backgroundColor: '#5d4037',
-              borderRadius: '50%',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.3)',
-            }}
-          />
-        </div>
-        {/* Letter content container – padded, dark text on parchment */}
-        <div className="relative px-6 pt-8 pb-6 max-w-prose text-gray-800 font-serif">
-          {/* The letter content will be placed here – we reuse LetterContent but make it bold */}
-          <LetterContentBold />
-        </div>
-      </div>
+        </motion.div>
+
+        {/* Parchment body with letter content */}
+        <motion.div
+          ref={parchmentRef}
+          style={{
+            position: 'relative',
+            backgroundColor: '#f9f6ee',
+            overflow: 'hidden',
+            boxSizing: 'border-box',
+            padding: '20px',
+            borderLeft: '1px solid #e8e3d9',
+            borderRight: '1px solid #e8e3d9',
+          }}
+        >
+          {/* We'll animate the height to reveal content */}
+          <motion.div
+            style={{ height: '100%', overflow: 'hidden' }}
+          >
+            <LetterContent className="text-gray-800 font-serif leading-relaxed" />
+          </motion.div>
+        </motion.div>
+
+        {/* Bottom roll */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 24,
+            backgroundColor: '#f9f6ee',
+            borderBottomLeftRadius: '12px',
+            borderBottomRightRadius: '12px',
+            backgroundImage: "linear-gradient(to top, #e8e3d9, #f9f6ee)",
+            boxShadow: '0 -2px 4px rgba(0,0,0,0.2)',
+            transformOrigin: 'center',
+            transform: ({ bottomRollY, bottomRollRotateX }) => `
+              translateY(${bottomRollY}px)
+              rotateX(${bottomRollRotateX}deg)
+            `,
+          }}
+        >
+        </motion.div>
+      </motion.div>
     );
   }
 
@@ -100,18 +144,11 @@ const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd })
         if (stage === 1) onOpeningAnimationEnd();
         else if (stage === 2) onScrollAnimationEnd();
       }}
-      className="relative mx-4"
+      className="relative"
     >
       {Content && <Content />}
     </motion.div>
   );
 };
-
-// A simple wrapper around LetterContent that makes the text bold and slightly larger
-const LetterContentBold = () => (
-  <div className="font-bold text-xl md:text-2xl leading-relaxed">
-    <LetterContent />
-  </div>
-);
 
 export default ScrollAnimation;

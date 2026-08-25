@@ -1,7 +1,30 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-const Envelope = ({ onClick }) => {
+const Envelope = ({ onClick, asScroll = false }) => {
+  if (asScroll) {
+    // Rendered as a rolled scroll (simplified)
+    return (
+      <motion.div
+        onClick={onClick}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="relative w-[200px] h-[40px] md:w-[260px] md:h-[50px] flex items-center justify-center"
+      >
+        {/* Scroll body */}
+        <div className="relative w-full h-full bg-[#f9f6ee] rounded-lg">
+          {/* Top curl */}
+          <div className="absolute left-0 top-0 w-full h-2 bg-[#e8e3d9]/80" />
+          {/* Bottom curl */}
+          <div className="absolute left-0 bottom-0 w-full h-2 bg-[#e8e3d9]/80" />
+          {/* Shadow for depth */}
+          <div className="absolute inset-0 bg-black/5 blur-sm opacity-20 pointer-events-none" />
+        </div>
+      </motion.div>
+    );
+  }
+
+  // Original envelope
   return (
     <motion.div
       onClick={onClick}
