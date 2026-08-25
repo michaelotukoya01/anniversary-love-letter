@@ -272,7 +272,7 @@ html, body {
     background: var(--paper);
     border-left: 1px solid var(--paper-dark);
     border-right: 1px solid var(--paper-dark);
-    overflow: hidden;
+    overflow: visible;
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
     transform-origin: top center;
 }
@@ -284,7 +284,7 @@ html, body {
     background-image:
         url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23e8d7b5"/><path d="M0,50 Q25,40 50,50 T100,50" stroke="%23d4c1a0" stroke-width="0.5" fill="none"/></svg>');
     background-size: cover;
-    opacity: 0.3;
+    opacity: 0.15;
     pointer-events: none;
 }
 
@@ -297,6 +297,7 @@ html, body {
     background-repeat: repeat-y;
     background-size: 100% 20px;
     pointer-events: none;
+    opacity: 0.2;
 }
 
 /* Scroll Animation Classes */
@@ -314,14 +315,12 @@ html, body {
 
 .letter-content {
     position: relative;
+    z-index: 2;
     padding: 20px;
     color: var(--ink);
     line-height: 1.6;
     font-size: 1.1rem;
-    height: 100%;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--paper-dark) var(--paper);
+    height: auto;
 }
 
 /* Letter Content Reveal */
