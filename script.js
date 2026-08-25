@@ -98,7 +98,7 @@ I hope today and many more days remind us of how awesome we are.`;
             backgroundAudio.loop = true;
             backgroundAudio.volume = 0.5;
         }
-        backgroundAudio.src = 'assets/audio/a-thousand-years.mp3';
+        backgroundAudio.src = '/audio/a-thousand-years.mp3';
         return backgroundAudio;
     }
 
