@@ -114,6 +114,7 @@ I hope today and many more days remind us of how awesome we are.`;
                 setTimeout(() => {
                     passwordGate.classList.add('hidden');
                     mainExperience.classList.remove('hidden');
+                    mainExperience.classList.add('visible'); // Ensure opacity transition
                     // Trigger intro quote animation
                     setTimeout(() => {
                         introQuote.classList.add('visible');
