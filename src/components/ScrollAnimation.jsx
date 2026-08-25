@@ -138,8 +138,6 @@ const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd })
       key={stage}
       initial={variants.initial}
       animate={variants.animate}
-      exit={variants.exit}
-      transition={variants.transition}
       onAnimationComplete={() => {
         if (stage === 1) onOpeningAnimationEnd();
         else if (stage === 2) onScrollAnimationEnd();
