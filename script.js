@@ -89,8 +89,10 @@ I hope today and many more days remind us of how awesome we are.`;
 
     // Password handling
     unlockButton.addEventListener('click', () => {
+        console.log('Unlock button clicked');
         const password = passwordInput.value.trim();
         if (password === '0509') {
+            console.log('Password correct');
             // Correct password
             passwordError.textContent = '';
             unlockButton.classList.add('glowing');
@@ -115,6 +117,7 @@ I hope today and many more days remind us of how awesome we are.`;
                 }, 500);
             }, 500);
         } else {
+            console.log('Password incorrect');
             // Incorrect password
             passwordError.textContent = 'Not quite... try again. ♡';
             passwordInput.value = '';
@@ -231,3 +234,15 @@ I hope today and many more days remind us of how awesome we are.`;
         }
     });
 });
+
+// Add shake animation keyframes for incorrect password
+const style = document.createElement('style');
+style.textContent = `
+@keyframes shake {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
+    100% { transform: translateX(0); }
+}`;
+document.head.appendChild(style);
