@@ -19,7 +19,6 @@ const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd })
   const stage1Variants = {
     initial: { scale: 0.8, rotate: -5, opacity: 0 },
     animate: { scale: 1, rotate: 0, opacity: 1 },
-    exit: { scale: 1.2, rotate: 2, opacity: 0 },
     transition: { duration: 0.8, ease: 'easeOut' },
   };
 
@@ -40,14 +39,6 @@ const ScrollAnimation = ({ stage, onOpeningAnimationEnd, onScrollAnimationEnd })
       topRollRotateX: 0,
       bottomRollRotateX: 0,
       opacity: 1
-    },
-    exit: {
-      height: 0,
-      topRollY: 0,
-      bottomRollY: 0,
-      topRollRotateX: 30,
-      bottomRollRotateX: -30,
-      opacity: 0
     },
     transition: { duration: 2.5, ease: 'easeOut' },
   };

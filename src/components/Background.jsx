@@ -1,12 +1,11 @@
-import React from 'react';
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 const Background = () => {
   // We'll create a canvas for particles or use div-based particles
   // For simplicity and performance, we'll use multiple div particles with CSS animations
 
   useEffect(() => {
-    // Create particles
+    // Create particles container
     const container = document.createElement('div');
     container.style.position = 'fixed';
     container.style.inset = '0';
@@ -76,7 +75,7 @@ const Background = () => {
         ))}
       </div>
       {/* Very subtle film grain */}
-      <div className="absolute inset-0 bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22200%22 height=%22200%22 viewBox=%220 0 200 200%22><filter id=%22noiseFilter%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%22></filter><rect width=%22100%22 height=%22100%22 filter=%22url(%23noiseFilter)%22 opacity=%220.05%22/%22></svg>')] bg-[size:200%_200%]" />
+      <div className="absolute inset-0 bg-[url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%20width=%22200%22 height=%22200%22 viewBox=%220%200%20200%20200%22><filter id=%22noiseFilter%22><feTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%22></filter><rect width=%22100%22 height=%22100%22 filter=%22url(%23noiseFilter)%22 opacity=%220.05%22/%22></svg>')] bg-[size:200%_200%]" />
     </div>
   );
 };
