@@ -151,7 +151,7 @@ I hope today and many more days remind us of how awesome we are.`;
     });
 
     // Letter click handling
-    letterContainer.addEventListener('click', () => {
+    letterContainer.addEventListener('click', async () => {
         if (!state.letterShown || state.scrollOpened) return;
 
         // Hide the letter and show the scroll container
@@ -161,16 +161,12 @@ I hope today and many more days remind us of how awesome we are.`;
         // Start music
         try {
             const audio = getAudio();
-            audio.play().then(() => {
-                state.musicPlaying = true;
-                musicControl.classList.add('visible');
-            }).catch(e => {
-                console.warn('Autoplay blocked or failed:', e);
-                // Still show music control so user can try to play later
-                musicControl.classList.add('visible');
-            });
+            await audio.play();
+            state.musicPlaying = true;
+            musicControl.classList.add('visible');
         } catch (e) {
-            console.warn('Audio playback not supported:', e);
+            console.warn('Autoplay blocked or failed:', e);
+            // Still show music control so user can try to play later
             musicControl.classList.add('visible');
         }
 
