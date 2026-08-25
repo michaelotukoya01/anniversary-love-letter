@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicControl = document.getElementById('music-control');
     const musicToggle = document.getElementById('music-toggle');
     const musicIcon = document.getElementById('music-icon');
+    const readMoreButton = document.getElementById('read-more-button');
 
     // State
     let state = {
@@ -30,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
         letterShown: false,
         scrollOpened: false,
         letterRevealed: false,
-        finalShown: false,
         musicPlaying: false
     };
 
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	I see you, I appreciate you, I appreciate the person you are, the things you’ve gone out of your way to do for me, the love you’ve shown me and understanding me cause I know I’m not the easiest person to understand. I appreciate every time you’ve made me laugh, everytime you’ve listened to me, everytime you’re exhausted and you’d tell me not to hesitate to talk to you or call you if you’re asleep. thank you for supporting me and always reminding me of how beautiful I am.Genuinely, thank you.
 
-	broo, I’m also going to talk about our difficult moments. so many times we didn’t understand each other, so many times things felt odd, times we were so distant and times where I thought it wasn’t worth it.
+	broo, I’m also going to talk about our difficult moments. so many times we didn’t understand each other, so many times things felt odd, so many times we were so distant and times where I thought it wasn’t worth it.
 
 	but those moments didn’t break us nor ruin what we had for each other, it built us in the relationship.
 
@@ -192,26 +192,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 }, index * 300); // 300ms between each paragraph
             });
             state.letterRevealed = true;
-            // After all paragraphs revealed, show final message
+            // After all paragraphs revealed, show Read More button
             setTimeout(() => {
-                finalMessage.classList.remove('hidden');
-                // Animate in final message line by line
-                setTimeout(() => {
-                    finalTexts.forEach((text, index) => {
-                        setTimeout(() => {
-                            text.classList.add('visible');
-                        }, index * 400);
-                    });
-                    setTimeout(() => {
-                        signature.classList.add('visible');
-                    }, finalTexts.length * 400 + 200);
-                    setTimeout(() => {
-                        seventh.classList.add('visible');
-                    }, finalTexts.length * 400 + 600);
-                }, 500);
-                state.finalShown = true;
+                readMoreButton.classList.remove('hidden');
             }, pElements.length * 300); // Wait for all paragraphs to be revealed
         }, 2500); // Wait for scroll animation to complete
+    });
+
+    // Read More button handling
+    readMoreButton.addEventListener('click', () => {
+        // Hide main experience
+        mainExperience.classList.remove('visible');
+        mainExperience.classList.add('hidden');
+        // Show final message
+        finalMessage.classList.remove('hidden');
+        // Reveal final message content with the same delays as before
+        setTimeout(() => {
+            finalTexts.forEach((text, index) => {
+                setTimeout(() => {
+                    text.classList.add('visible');
+                }, index * 400);
+            });
+            setTimeout(() => {
+                signature.classList.add('visible');
+            }, finalTexts.length * 400 + 200);
+            setTimeout(() => {
+                seventh.classList.add('visible');
+            }, finalTexts.length * 400 + 600);
+        }, 500);
     });
 
     // Music toggle
