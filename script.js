@@ -183,19 +183,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // After scroll animation, start revealing letter content
         setTimeout(() => {
-            injectLetterContent();
-            // Reveal paragraphs one by one with a delay
-            const pElements = letterContent.querySelectorAll('p');
-            pElements.forEach((p, index) => {
+            try {
+                injectLetterContent();
+                // Reveal paragraphs one by one with a delay
+                const pElements = letterContent.querySelectorAll('p');
+                console.log(`Found ${pElements.length} paragraphs to reveal`);
+                pElements.forEach((p, index) => {
+                    setTimeout(() => {
+                        p.classList.add('visible');
+                    }, index * 300); // 300ms between each paragraph
+                });
+                state.letterRevealed = true;
+                // After all paragraphs revealed, show Read More button
                 setTimeout(() => {
-                    p.classList.add('visible');
-                }, index * 300); // 300ms between each paragraph
-            });
-            state.letterRevealed = true;
-            // After all paragraphs revealed, show Read More button
-            setTimeout(() => {
-                readMoreButton.classList.remove('hidden');
-            }, pElements.length * 300); // Wait for all paragraphs to be revealed
+                    console.log('Showing Read More button');
+                    readMoreButton.classList.remove('hidden');
+                }, pElements.length * 300); // Wait for all paragraphs to be revealed
+            } catch (err) {
+                console.error('Error revealing letter content:', err);
+                // Fallback: show button after a delay
+                setTimeout(() => {
+                    console.log('Fallback: showing Read More button due to error');
+                    readMoreButton.classList.remove('hidden');
+                }, 3000);
+            }
         }, 2500); // Wait for scroll animation to complete
     });
 
