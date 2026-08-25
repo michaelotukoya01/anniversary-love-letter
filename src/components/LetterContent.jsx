@@ -32,7 +32,12 @@ You definitely know that you are loved and you know how much you matter to me an
 
 I am so grateful for you and I’ll always the place you have in my life.
 
-Happy anniversary to us my loveee.😚I hope today and many more days remind us of how awesome we are.`;
+Happy anniversary to us my loveee.😚I hope today and many more days remind us of how awesome we are.
+
+Our story may not always be perfectly but it is ours and that makes every page worth turning.
+with all my heart, always yours.
+Happy anniversary, my babyy.
+🖤`;
 
 // Split by double newline to get sections
 const sections = letterText.split('\n\n').filter(section => section.trim() !== '');
