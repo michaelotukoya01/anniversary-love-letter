@@ -231,7 +231,7 @@ html, body {
     position: relative;
     width: 100%;
     max-width: 400px;
-    height: auto;
+    height: 100%;
     min-height: 600px;
 }
 
@@ -285,6 +285,7 @@ html, body {
     background-size: cover;
     opacity: 0.3;
     pointer-events: none;
+    display: none;
 }
 
 .parchment::after {
@@ -296,6 +297,7 @@ html, body {
     background-repeat: repeat-y;
     background-size: 100% 20px;
     pointer-events: none;
+    display: none;
 }
 
 /* Scroll Animation Classes */
