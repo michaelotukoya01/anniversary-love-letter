@@ -430,7 +430,9 @@ html, body {
     border: none;
     font-size: 0.875rem;
     transition: background-color 0.3s ease;
-    display: inline-block;
+    display: block;
+    margin: 0 auto;
+    max-width: max-content;
 }
 
 .read-more-btn:hover {
