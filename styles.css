@@ -415,9 +415,12 @@ html, body {
 
 /* Read More Button Container */
 #read-more-button:not(.hidden) {
-    display: block;
-    margin-top: 2rem;
-    text-align: center;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin-top: 2rem !important;
+    text-align: center !important;
+    overflow: visible !important;
 }
 
 /* Read More Button Style */
@@ -430,9 +433,9 @@ html, body {
     border: none;
     font-size: 0.875rem;
     transition: background-color 0.3s ease;
-    display: block;
-    margin: 0 auto;
-    max-width: max-content;
+    display: block !important;
+    margin: 0 auto !important;
+    max-width: max-content !important;
 }
 
 .read-more-btn:hover {
@@ -441,13 +444,13 @@ html, body {
 
 /* Ensure button is visible when both container and main experience are visible */
 #main-experience:not(.hidden) #read-more-button:not(.hidden) {
-    visibility: visible;
-    opacity: 1;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 #main-experience:not(.hidden) #read-more-button:not(.hidden) .read-more-btn {
-    visibility: visible;
-    opacity: 1;
+    visibility: visible !important;
+    opacity: 1 !important;
 }
 
 #music-toggle {
