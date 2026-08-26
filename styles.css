@@ -437,13 +437,13 @@ html, body {
     background-color: var(--paper-light);
 }
 
-/* Ensure button is visible when it should be */
-#read-more-button:not(.hidden) {
+/* Ensure button is visible when both container and main experience are visible */
+#main-experience:not(.hidden) #read-more-button:not(.hidden) {
     visibility: visible;
     opacity: 1;
 }
 
-.read-more-btn {
+#main-experience:not(.hidden) #read-more-button:not(.hidden) .read-more-btn {
     visibility: visible;
     opacity: 1;
 }
