@@ -236,14 +236,14 @@ html, body {
     position: relative;
     width: 100%;
     max-width: 400px;
-    height: 100%;
+    height: auto;
     min-height: 600px;
 }
 
 .scroll {
     position: relative;
     width: 100%;
-    min-height: 100%;
+    min-height: 600px;
     perspective: 1200px;
     transform-style: preserve-3d;
 }
