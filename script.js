@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicToggle = document.getElementById('music-toggle');
     const musicIcon = document.getElementById('music-icon');
     const readMoreButton = document.getElementById('read-more-button');
-    const endNotification = document.getElementById('end-notification');
+    const bottomNotification = document.getElementById('bottom-notification');
     const notificationContent = document.querySelector('.notification-content');
 
     // State
@@ -34,8 +34,41 @@ document.addEventListener('DOMContentLoaded', () => {
         scrollOpened: false,
         letterRevealed: false,
         musicPlaying: false,
-        endNotificationShown: false
+        notificationShown: false,
+        notificationTimeoutId: null
     };
+
+    // Scroll listener for bottom notification
+    function checkScrollPosition() {
+        if (!state.letterRevealed || state.notificationShown) return;
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const pageHeight = document.documentElement.scrollHeight;
+        if (scrollPosition >= pageHeight - 20) {
+            showNotification();
+        }
+    }
+    function showNotification() {
+        if (state.notificationShown) return;
+        state.notificationShown = true;
+        bottomNotification.classList.remove('hidden');
+        notificationContent.classList.add('visible');
+        // Auto-hide after 60 seconds
+        state.notificationTimeoutId = setTimeout(() => {
+            hideNotification();
+        }, 60000);
+        // Remove scroll listener to avoid repeated calls
+        window.removeEventListener('scroll', checkScrollPosition);
+    }
+    function hideNotification() {
+        notificationContent.classList.remove('visible');
+        state.notificationShown = false;
+        if (state.notificationTimeoutId) {
+            clearTimeout(state.notificationTimeoutId);
+            state.notificationTimeoutId = null;
+        }
+        bottomNotification.classList.add('hidden');
+    }
+    window.addEventListener('scroll', checkScrollPosition, { passive: true });
 
     // Audio element (created lazily)
     let backgroundAudio = null;
@@ -240,9 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     });
 
-    // End notification handling
+    // Notification click handling
     notificationContent.addEventListener('click', () => {
-        if (state.endNotificationShown) {
+        if (state.notificationShown) {
             // Hide main experience
             mainExperience.classList.remove('visible');
             mainExperience.classList.add('hidden');
