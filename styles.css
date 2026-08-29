@@ -578,9 +578,50 @@ html, body {
     .final-text,
     .signature,
     .seventh,
-    .notification-content {
+    .notification-content,
+    .end-notification-content {
         transition: none !important;
         animation: none !important;
     }
+}
+
+/* End Notification Styles (completely independent) */
+#end-notification {
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 20px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-120%);
+    z-index: 2147483000;
+    pointer-events: none;
+}
+
+.end-notification-content {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.95);
+    color: var(--black);
+    padding: 1.5rem 2.5rem;
+    border-radius: 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    pointer-events: all;
+    cursor: pointer;
+    transition: all 0.5s ease;
+    opacity: 0;
+    visibility: hidden;
+    display: block;
+}
+
+.end-notification-content.visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+    pointer-events: all;
+}
+
+.end-notification-content:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateX(-50%) translateY(-3px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.35);
 }
 

@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const readMoreButton = document.getElementById('read-more-button');
     const bottomNotification = document.getElementById('bottom-notification');
     const notificationContent = document.querySelector('.notification-content');
+    const endNotification = document.getElementById('end-notification');
+    const endNotificationContent = document.querySelector('.end-notification-content');
 
     // State
     let state = {
@@ -35,7 +37,10 @@ document.addEventListener('DOMContentLoaded', () => {
         letterRevealed: false,
         musicPlaying: false,
         notificationShown: false,
-        notificationTimeoutId: null
+        notificationTimeoutId: null,
+        endNotificationShown: false,
+        endNotificationTimeoutId: null,
+        letterFinished: false
     };
 
     // Scroll listener for bottom notification
@@ -68,6 +73,66 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         bottomNotification.classList.add('hidden');
     }
+
+    // End Notification Functions
+    function checkScrollPositionForEndNotification() {
+        // Only check if letter has finished revealing and end notification hasn't been shown yet
+        if (!state.letterFinished || state.endNotificationShown) return;
+
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const pageHeight = document.documentElement.scrollHeight;
+        const atBottom = scrollPosition >= pageHeight - 20; // 20px tolerance
+
+        if (atBottom) {
+            console.log("END NOTIFICATION: BOTTOM REACHED");
+            showEndNotification();
+        }
+    }
+
+    function showEndNotification() {
+        if (state.endNotificationShown) return;
+
+        console.log("END NOTIFICATION: SHOWING");
+        state.endNotificationShown = true;
+        endNotification.classList.remove('hidden');
+        endNotificationContent.classList.add('visible');
+        console.log("END NOTIFICATION: VISIBLE");
+
+        // Auto-hide after 60 seconds
+        state.endNotificationTimeoutId = setTimeout(() => {
+            hideEndNotification();
+        }, 60000);
+
+        // Remove scroll listener to avoid repeated calls
+        window.removeEventListener('scroll', checkScrollPositionForEndNotification);
+    }
+
+    function hideEndNotification() {
+        endNotificationContent.classList.remove('visible');
+        state.endNotificationShown = false;
+        if (state.endNotificationTimeoutId) {
+            clearTimeout(state.endNotificationTimeoutId);
+            state.endNotificationTimeoutId = null;
+        }
+        endNotification.classList.add('hidden');
+    }
+
+    function checkAndShowEndNotification() {
+        // Check if we're already at the bottom
+        const scrollPosition = window.innerHeight + window.scrollY;
+        const pageHeight = document.documentElement.scrollHeight;
+        const atBottom = scrollPosition >= pageHeight - 20; // 20px tolerance
+
+        if (atBottom) {
+            console.log("END NOTIFICATION: BOTTOM REACHED (immediate check)");
+            showEndNotification();
+        } else {
+            // Add scroll listener to check for bottom
+            window.addEventListener('scroll', checkScrollPositionForEndNotification, { passive: true });
+            console.log("END NOTIFICATION: Waiting for user to reach bottom...");
+        }
+    }
+
     window.addEventListener('scroll', checkScrollPosition, { passive: true });
 
     // Audio element (created lazily)
@@ -227,6 +292,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 pElements.forEach((p, index) => {
                     setTimeout(() => {
                         p.classList.add('visible');
+                        // Check if this is the last paragraph
+                        if (index === pElements.length - 1) {
+                            // All paragraphs have finished revealing
+                            state.letterFinished = true;
+                            console.log("END NOTIFICATION: LETTER FINISHED");
+                            checkAndShowEndNotification();
+                        }
                     }, index * 300); // 300ms between each paragraph
                 });
                 state.letterRevealed = true;
@@ -291,6 +363,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // End Notification click handling
+    endNotificationContent.addEventListener('click', () => {
+        if (state.endNotificationShown) {
+            console.log("END NOTIFICATION: CLICKED");
+            // Hide main experience
+            mainExperience.classList.remove('visible');
+            mainExperience.classList.add('hidden');
+            // Show final message
+            finalMessage.classList.remove('hidden');
+            // Reveal final message content with the same delays as before
+            setTimeout(() => {
+                finalTexts.forEach((text, index) => {
+                    setTimeout(() => {
+                        text.classList.add('visible');
+                    }, index * 400);
+                });
+                setTimeout(() => {
+                    signature.classList.add('visible');
+                }, finalTexts.length * 400 + 200);
+                setTimeout(() => {
+                    seventh.classList.add('visible');
+                }, finalTexts.length * 400 + 600);
+            }, 500);
+            // Hide the end notification when clicked
+            hideEndNotification();
+        }
+    });
+
     // Keyboard accessibility for notification
     notificationContent.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -301,6 +401,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Make notification focusable
     notificationContent.setAttribute('tabindex', '0');
+
+    // Make end notification focusable
+    endNotificationContent.setAttribute('tabindex', '0');
+
+    // Keyboard accessibility for end notification
+    endNotificationContent.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            endNotificationContent.click();
+        }
+    });
 
     // Music toggle
     musicToggle.addEventListener('click', () => {
