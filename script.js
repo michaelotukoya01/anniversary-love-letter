@@ -230,15 +230,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, index * 300); // 300ms between each paragraph
                 });
                 state.letterRevealed = true;
-                // After all paragraphs revealed, show end notification
-                setTimeout(() => {
-                    console.log('Showing end notification');
-                    // Show notification with animation
-                    requestAnimationFrame(() => {
-                        notificationContent.classList.add('visible');
-                    });
-                    state.endNotificationShown = true;
-                }, pElements.length * 300); // Wait for all paragraphs to be revealed
+                // Letter finished revealing - notification will show when user reaches bottom
+                // via scroll listener (which checks for letterRevealed state)
             } catch (err) {
                 console.error('Error revealing letter content:', err);
                 // Fallback: show button after a delay

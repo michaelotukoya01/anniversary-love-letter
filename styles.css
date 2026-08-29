@@ -517,28 +517,29 @@ html, body {
     }
 }
 
-/* Bottom Notification Styles */
+/Bottom Notification Styles */
 #bottom-notification {
     position: fixed;
     top: env(safe-area-inset-top, 0px);
     left: 0;
     right: 0;
+    text-align: center;
     pointer-events: none;
     z-index: 1000;
 }
 
 .notification-content {
     display: inline-block;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     color: var(--black);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     pointer-events: all;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.4s ease;
     opacity: 0;
     visibility: hidden;
     transform: translateY(-120%);
@@ -553,8 +554,8 @@ html, body {
 
 .notification-content:hover {
     background: rgba(255, 255, 255, 1);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
 }
 
 /* Reduced Motion */
@@ -577,50 +578,9 @@ html, body {
     .final-text,
     .signature,
     .seventh,
-    #end-notification,
     .notification-content {
         transition: none !important;
         animation: none !important;
     }
 }
 
-/* Fixed Notification Styles */
-#end-notification {
-    position: fixed;
-    top: 1rem;
-    left: 0;
-    right: 0;
-    text-align: center;
-    z-index: 1000;
-    pointer-events: none;
-}
-
-.notification-content {
-    display: inline-block;
-    background: rgba(255, 255, 255, 0.9);
-    color: var(--black);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.5rem;
-    font-size: 1rem;
-    font-weight: 500;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    pointer-events: all;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(-10px);
-}
-
-.notification-content.visible {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-    pointer-events: all;
-}
-
-.notification-content:hover {
-    background: rgba(255, 255, 255, 1);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
