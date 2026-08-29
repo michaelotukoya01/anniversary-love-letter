@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const musicToggle = document.getElementById('music-toggle');
     const musicIcon = document.getElementById('music-icon');
     const readMoreButton = document.getElementById('read-more-button');
+    const endNotification = document.getElementById('end-notification');
+    const notificationContent = document.querySelector('.notification-content');
 
     // State
     let state = {
@@ -31,7 +33,8 @@ document.addEventListener('DOMContentLoaded', () => {
         letterShown: false,
         scrollOpened: false,
         letterRevealed: false,
-        musicPlaying: false
+        musicPlaying: false,
+        endNotificationShown: false
     };
 
     // Audio element (created lazily)
@@ -194,10 +197,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     }, index * 300); // 300ms between each paragraph
                 });
                 state.letterRevealed = true;
-                // After all paragraphs revealed, show Read More button
+                // After all paragraphs revealed, show end notification
                 setTimeout(() => {
-                    console.log('Showing Read More button');
-                    readMoreButton.classList.remove('hidden');
+                    console.log('Showing end notification');
+                    // Show notification with animation
+                    requestAnimationFrame(() => {
+                        notificationContent.classList.add('visible');
+                    });
+                    state.endNotificationShown = true;
                 }, pElements.length * 300); // Wait for all paragraphs to be revealed
             } catch (err) {
                 console.error('Error revealing letter content:', err);
@@ -210,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 2500); // Wait for scroll animation to complete
     });
 
-    // Read More button handling
+    // Read More button handling (keeping for backward compatibility)
     readMoreButton.addEventListener('click', () => {
         // Hide main experience
         mainExperience.classList.remove('visible');
@@ -232,6 +239,42 @@ document.addEventListener('DOMContentLoaded', () => {
             }, finalTexts.length * 400 + 600);
         }, 500);
     });
+
+    // End notification handling
+    notificationContent.addEventListener('click', () => {
+        if (state.endNotificationShown) {
+            // Hide main experience
+            mainExperience.classList.remove('visible');
+            mainExperience.classList.add('hidden');
+            // Show final message
+            finalMessage.classList.remove('hidden');
+            // Reveal final message content with the same delays as before
+            setTimeout(() => {
+                finalTexts.forEach((text, index) => {
+                    setTimeout(() => {
+                        text.classList.add('visible');
+                    }, index * 400);
+                });
+                setTimeout(() => {
+                    signature.classList.add('visible');
+                }, finalTexts.length * 400 + 200);
+                setTimeout(() => {
+                    seventh.classList.add('visible');
+                }, finalTexts.length * 400 + 600);
+            }, 500);
+        }
+    });
+
+    // Keyboard accessibility for notification
+    notificationContent.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            notificationContent.click();
+        }
+    });
+
+    // Make notification focusable
+    notificationContent.setAttribute('tabindex', '0');
 
     // Music toggle
     musicToggle.addEventListener('click', () => {
